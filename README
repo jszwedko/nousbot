@@ -4,6 +4,7 @@ not ready yet, but hopefully will be soon :)
 currently will only connect to an irc channel and output the messages
 
 requirements:
-  node.js
-  node_redis (npm install redis)
-  node-irc (npm install irc)
+  node.js                         |   runtime
+  node_redis (npm install redis)  |   storage
+  node-irc (npm install irc)      |   irc interactions
+  winston (npm install winston)   |   logging

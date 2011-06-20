@@ -1,6 +1,7 @@
 # load the project configuration
 {config} = require "./config" # pull config out of config file
-{server, nick, chans} = config # pull the values out of config 
+{network} = config # pull the values out of config 
+{server, nick, chans} = network
 
 # load project dependencies
 irc = require "irc"
