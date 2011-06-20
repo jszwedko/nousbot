@@ -13,9 +13,8 @@ connect = ->
   console.log "this may take a while..."
   new irc.Client server, nick, channels: chans
 
-# define the plugin loader
-loadPlugins = ->
-  plugins = {} # create an empty object for pushing to
+plugins = {} # create an empty object for pushing to
+do (plugins) ->
   # loop through the plugins dir
   fs.readdirSync("./plugins").forEach (plugin) ->
     # look for .coffee files
@@ -24,10 +23,8 @@ loadPlugins = ->
       # push matched plugins
       plugins[plugin] = ->
         require "./plugins/#{plugin}"
-  return plugins #return plugins object
 
 nous = connect() # create the irc connection
-plugins = loadPlugins() # load the plugins map
 for name, loader of plugins # loop over plugins
   try
     name = loader() # and load each plugin

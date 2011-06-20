@@ -8,3 +8,8 @@ requirements:
   node_redis (npm install redis)  |   storage
   node-irc (npm install irc)      |   irc interactions
   winston (npm install winston)   |   logging
+  node.io                         |   sceen scraping
+
+contributors:
+  eggsby
+  tanepiper

@@ -1,8 +1,8 @@
-redis = module.exports
-client = module.exports
+persist = module.exports
 
-redis = require "redis"
-client = redis.createClient()
+persist.redis = require "redis"
+persist.client = redis.createClient()
 
+client = persist.client
 client.on "error", (err) ->
   console.log "Error: #{err}"
