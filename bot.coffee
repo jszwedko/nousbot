@@ -33,5 +33,4 @@ for name, loader of plugins # loop over plugins
     name = loader() # and load each plugin
     name.start(nous)
   catch err
-    console.log "failed to load plugin"
-    throw err
+    console.log "failed to load plugin #{name}"

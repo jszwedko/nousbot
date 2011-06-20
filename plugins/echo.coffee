@@ -1,8 +1,6 @@
 echo = module.exports
+{command} = require "./util"
 
 echo.start = (nous) ->
-  nous.addListener "message", (from, to, msg) ->
-    m = msg.match /^!echo\ (.*)$/ # there has to be a better way to do this....
-    if m
-      input = m[1]
-      nous.say to, input
+  command nous, "echo", (input) ->
+    nous.say input.to, input.msg

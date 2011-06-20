@@ -3,7 +3,7 @@ nous = module.exports
 nous.config =
   network:
     server: "irc.freenode.net"
-    chans: ["#test-test"]
+    chans: ["##noustest"]
     nick: "nousbot"
     pass: ""
   logdir: "./logs"
