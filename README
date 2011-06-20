@@ -1,0 +1,9 @@
+nousbot is a simple coffeescript/node.js irc bot meant to do useful things
+
+not ready yet, but hopefully will be soon :)
+currently will only connect to an irc channel and output the messages
+
+requirements:
+  node.js
+  node_redis (npm install redis)
+  node-irc (npm install irc)
