@@ -15,6 +15,6 @@ createLogger = ->
 logger = createLogger()
 log.logger = logger
 
-log.start = (bot) ->
-  bot.addListener "message", (from, to, msg) ->
+log.start = (nous) ->
+  nous.addListener "message", (from, to, msg) ->
     logger.log "info", "#{to} <#{from}>: #{msg}"
