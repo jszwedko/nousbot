@@ -1,7 +1,7 @@
 # load the project configuration
 {config} = require "./config" # pull config out of config file
 {network} = config # pull the values out of config 
-{server, nick, chans} = network
+{server, nick, opts} = network
 
 # load project dependencies
 irc = require "irc"
@@ -9,9 +9,9 @@ fs = require "fs"
 
 # define the connection method
 connect = ->
-  console.log "Attempting to connect to #{server}: #{chans} as #{nick}"
+  console.log "Attempting to connect to #{server} as #{nick}"
   console.log "this may take a while..."
-  new irc.Client server, nick, channels: chans
+  new irc.Client server, nick, opts
 
 plugins = {} # create an empty object for pushing to
 do (plugins) ->

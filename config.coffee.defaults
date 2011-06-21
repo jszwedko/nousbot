@@ -1,0 +1,16 @@
+nous = module.exports
+
+nous.config =
+  network:
+    server: "irc.freenode.net"
+    nick: "nousbot"
+    opts:
+      channels: ["##nous-test"]
+      password: ""
+      userName: "nousbot"
+      realName: "nouminos bot"
+  logdir: "./logs"
+  admins: [
+    "eggsby"
+    "tanepiper"
+  ]
