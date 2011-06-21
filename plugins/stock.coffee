@@ -9,7 +9,7 @@ stock.start = (nous) ->
       latest = ($ "last").attribs.data
       ticker = ($ "symbol").attribs.data
       change = ($ "change").attribs.data
-      if latest
+      if latest and company
         nous.say input.to, "#{company} (#{ticker}): $#{latest} (#{change})"
       else
         nous.say input.to, "Couldn't get the value of ticker symbol #{input.msg}"
