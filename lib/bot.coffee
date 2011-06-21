@@ -2,46 +2,70 @@ EventEmitter = require('events').EventEmitter
 
 module.exports = class Bot extends EventEmitter
     constructor: (@base_path, @config) ->
-        @logger = require 'winston'
+        @lib_path = "#{@base_path}/lib"
+        @plugin_path = "#{@base_path}/plugins"
+        
+        @logger = require("#{@lib_path}/logger") @
+        
+        @app_log = @logger "main-log"
         
         @_ = require 'underscore'
         @fs = require 'fs'
         @irc = require 'irc'        
         @express = require 'express'
         
+        @util       = require "#{@lib_path}/util"
+        
+        @command = require("#{@lib_path}/util").command
+        @parse   = require("#{@lib_path}/util").parse
+        
         @plugins = {}
         @clients = {}
         
         do =>
-            @logger.debug "=============== Loading Plugins==============="
+            @app_log.debug "=============== Loading Plugins==============="
             # loop through the plugins dir
-            @fs.readdirSync("#{@base_path}/plugins").forEach (plugin) =>
-                # look for .coffee files
-                if plugin.match /^.*\.coffee$/
-                    plugin = plugin.replace ".coffee", ""
-                    @logger.debug "Loading plugin #{plugin}"
-                    # push matched plugins
-                    @plugins[plugin] = =>
-                        require "#{@base_path}/plugins/#{plugin}"
+            @fs.readdirSync("#{@plugin_path}").sort().forEach (plugin) =>
+                @app_log.debug "Loading plugin #{plugin}"
+                try
+                    # look for .coffee files
+                    if plugin.match /^.*\.coffee$/
+                        plugin = plugin.replace ".coffee", ""
+                        # push matched plugins
+                        @plugins[plugin] = require("#{@plugin_path}/#{plugin}")(@)
+                catch exp
+                    @app_log.error exp
+                    throw exp
                         
     connect: (id, options) ->
+        @emit 'preconnect', id
+        
         options ?= @config.network
         
-        @logger.info "Attempting to connect to #{options.server} as #{options.nick}"
-        @logger.debug "this may take a while..."
+        @app_log.info "Attempting to connect to #{options.server} as #{options.nick}"
+        @app_log.debug "this may take a while..."
         @clients[id] = new @irc.Client options.server, options.nick, options.opts
         
-        @clients[id].addListener 'error', @errorHandler
+        do =>
+            for name, loader of @plugins # loop over plugins
+                try
+                    name = loader() # and load each plugin
+                    name.start(@clients[id])
+                catch err
+                    @app_log.warn "failed to load plugin #{name}"
         
-        @clients[id].addListener 'raw', @rawHandler
+        @emit 'connect', id, @clients[id]
+        
+        @clients[id].addListener 'error', @errorHandler
+        @clients[id].addListener 'raw', @rawHandler if @config.debug
         
     errorHandler: (error) =>
-        @logger.error "ERROR: #{error.command} #{error.args.join ' '}"
+        @app_log.error "ERROR: #{error.command} #{error.args.join ' '}"
         @emit 'error', error, this
-        return error
+        #return error
         
     rawHandler: (message) =>
-        @logger.debug "RAW: #{message.command} #{message.args.join ' '}"
+        @app_log.debug "RAW: #{message.command} #{message.args.join ' '}"
         
                 
         
