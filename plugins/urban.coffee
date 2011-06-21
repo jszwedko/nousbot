@@ -8,11 +8,14 @@ urban.start = (nous) ->
   command nous, "urban", (input) ->
     url = "http://www.urbandictionary.com/define.php?term=#{(encodeURIComponent input.msg)}"
     parse url, (err, $, data) ->
-      words = []
-      $('td.word').each (word) ->
-        words.push word.text
-      if words
-        response = "Found results #{words}"
+      defs = []
+      try
+        $('div.definition').each (def) ->
+          defs.push def.text
+      catch err
+      if defs
+        response = "Found results #{defs[0]}"
+        console.log defs[0]
       else
         response = "did not find #{input.msg}"
       nous.say(input.to, response)

@@ -16,4 +16,8 @@ requirements:
 contributors:
   eggsby
   tanepiper
+
+plugins:
   protomega (stock.py tweaks)
+  TheEternalAbyss (urban prototype)
+  stenehall (isit)
