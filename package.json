@@ -1,0 +1,10 @@
+{
+    "name": "nousbot",
+    "version": "0.2.0",
+    "dependencies": {
+        "irc"       : ">=0.2.0",
+        "underscore": ">=1.1.6",
+        "express"   :">=2.3.11",
+        "winston"   :">=0.3.1"
+    }
+}
