@@ -18,3 +18,5 @@ log.logger = logger
 log.start = (nous) ->
   nous.addListener "message", (from, to, msg) ->
     logger.log "info", "#{to} <#{from}>: #{msg}"
+  nous.on "error", (err) ->
+    logger.log "warn", "#{err.command}: #{err.args}"
