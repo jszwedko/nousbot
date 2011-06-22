@@ -2,4 +2,5 @@
 *.js
 *.log
 node_modules
+.settings.xml
 config.coffee

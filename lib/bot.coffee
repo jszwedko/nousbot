@@ -15,10 +15,10 @@ module.exports = class Bot extends EventEmitter
         @irc = require 'irc'
         @express = require 'express'
         
-        @util       = require "#{@lib_path}/util"
+        @util = require "#{@lib_path}/util"
         
         @command = require("#{@lib_path}/util").command
-        @parse   = require("#{@lib_path}/util").parse
+        @parse = require("#{@lib_path}/util").parse
         
         @plugins = {}
         @clients = {}
@@ -67,14 +67,6 @@ module.exports = class Bot extends EventEmitter
         
         @clients[id].addListener 'error', @errorHandler
         @clients[id].addListener 'raw', @rawHandler if @config.debug
-        
-        for channel in @config.network.opts.channels
-            channel_logger = @logger channel
-            @clients[id].addListener "message#{channel}", (from, message) ->
-                channel_logger.info "#{from} - #{message}"
-        
-            
-        
         
     errorHandler: (error) =>
         @app_log.error "ERROR: #{error.command} #{error.args.join ' '}"
