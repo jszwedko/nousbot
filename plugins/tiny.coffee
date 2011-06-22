@@ -5,9 +5,7 @@ module.exports = (app) ->
         command nous, "tiny", (input) ->
             url = "http://tinyurl.com/api-create.php?url=#{input.msg}"
             parse url, (err, $, data) ->
-                selector = "body"
-                quote = $(selector)?.text || "Failed to create tinyurl.."
-                nous.say input.to, quote
+                nous.say input.to, data
 
     return {
         start: tiny

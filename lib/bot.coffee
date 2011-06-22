@@ -22,6 +22,7 @@ module.exports = class Bot extends EventEmitter
         
         @plugins = {}
         @clients = {}
+        @destroy = {}
         
         do =>
             @app_log.debug "=============== Loading Plugins==============="
@@ -32,13 +33,14 @@ module.exports = class Bot extends EventEmitter
                     if plugin.match /^.*\.coffee$/
                         plugin = plugin.replace ".coffee", ""
                         # push matched plugins
-                        path = "#{@plugin_path}/#{plugin}"
-                        @plugins[plugin] = -> require(path)(process.nous)
-                        @app_log.debug "Loading plugin #{plugin}"
+                        if plugin not in @config.plugins.blacklist
+                            path = "#{@plugin_path}/#{plugin}"
+                            @plugins[plugin] = -> require(path)(process.nous)
+                            @app_log.debug "Loading plugin #{plugin}"
                     else if plugin.match /^.*\.js$/
                         # favor coffee over js, but allow vanilla js plugins
                         plugin = plugin.replace ".js", ""
-                        if not @plugins[plugin]
+                        if not @plugins[plugin] and plugin not in @config.plugins.blacklist
                             path = "#{@plugin_path}/#{plugin}"
                             @plugins[plugin] = -> require(path)(process.nous)
                             @app_log.debug "Loading plugin #{plugin}"
@@ -67,6 +69,7 @@ module.exports = class Bot extends EventEmitter
         
         @clients[id].addListener 'error', @errorHandler
         @clients[id].addListener 'raw', @rawHandler if @config.debug
+        @clients[id].setMaxListeners 150
         
         for channel in @config.network.opts.channels
             channel_logger = @logger channel
