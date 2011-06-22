@@ -2,7 +2,7 @@
 
 module.exports = (app) ->
     {command, parse} = app.util
-
+    
     define = (nous) ->
         command nous, "define", (input) ->
             url = "http://ninjawords.com/#{(encodeURIComponent input.msg)}"
@@ -10,12 +10,12 @@ module.exports = (app) ->
                 try
                     defs = []
                     suggested = $("dt.title-word a").text
-                    if suggested == input.msg
+                    if suggested is input.msg
                         $('div.definition').each (def) ->
-                        def = ((def.striptags).match /deg;(.*)/)
-                        if def and def.length > 1
-                            def = def[1]
-                            defs.push def
+                            def = ((def.striptags).match /deg;(.*)/)
+                            if def and def.length > 1
+                                def = def[1]
+                                defs.push def
                     if defs
                         defstring = ""
                         defstring += "#{i+1} #{def} " for def, i in defs
@@ -24,8 +24,9 @@ module.exports = (app) ->
                         response = "Perhaps you meant #{suggested}"
                 catch err
                     response = "#{input.msg} is not in the dictionary."
+                    
                 nous.say(input.to, response)
-
+                
     return {
         start: define
     }
