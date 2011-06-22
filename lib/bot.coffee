@@ -68,6 +68,14 @@ module.exports = class Bot extends EventEmitter
         @clients[id].addListener 'error', @errorHandler
         @clients[id].addListener 'raw', @rawHandler if @config.debug
         
+        for channel in @config.network.opts.channels
+            channel_logger = @logger channel
+            @clients[id].addListener "message#{channel}", (from, message) ->
+                channel_logger.info "#{from} - #{message}"
+        
+            
+        
+        
     errorHandler: (error) =>
         @app_log.error "ERROR: #{error.command} #{error.args.join ' '}"
         @emit 'error', error, this
