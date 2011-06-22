@@ -67,6 +67,7 @@ module.exports = class Bot extends EventEmitter
         
         @clients[id].addListener 'error', @errorHandler
         @clients[id].addListener 'raw', @rawHandler if @config.debug
+        @clients[id].setMaxListeners 150
         
         for channel in @config.network.opts.channels
             channel_logger = @logger channel
