@@ -1,6 +1,7 @@
 nous = module.exports
 
 nous.config =
+    leader: "!"
     network:
         server: "irc.freenode.net"
         nick: "nousbot"

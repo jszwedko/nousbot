@@ -22,6 +22,7 @@ module.exports = class Bot extends EventEmitter
         
         @plugins = {}
         @clients = {}
+        @destroy = {}
         
         do =>
             @app_log.debug "=============== Loading Plugins==============="

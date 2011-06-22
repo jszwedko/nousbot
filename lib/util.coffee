@@ -1,14 +1,14 @@
 util = module.exports
 
+app = process.nous
 nodeio = require "node.io"
 {Parser} = require "xml2js"
 options = {}
 
-leader = "!"
-
 util.command = (nous, pattern, callback) ->
-    regex = "^#{leader + pattern}\ (.*)"
-    nous.addListener "message", (from, to, msg) ->
+    regex = "^#{app.config.leader + pattern}\ (.*)"
+
+    onCommand = (from, to, msg) ->
         match = msg.match RegExp(regex)
         if match
             input =
@@ -16,6 +16,11 @@ util.command = (nous, pattern, callback) ->
                 from: from
                 to: to
             callback input
+
+    nous.addListener "message", onCommand
+
+    app.destroy[pattern] = (nous) ->
+        nous.removeListener "message", onCommand
 
 util.parse = (url, callback) ->
     job = new nodeio.Job options, {
