@@ -1,8 +1,8 @@
 module.exports = (app) ->
-    config = app.config
-    admins = app.config.admins
+    {config} = app
+    {admins} = config
     {command} = app.util
-
+    
     admin = (nous) ->
         command nous, "kick", (input) ->
             if input.from in admins
@@ -17,7 +17,7 @@ module.exports = (app) ->
             if input.from in admins
                 nous.say input.to, "mehh...."
                 nous.send "MODE", input.to, "-b", input.msg
-
+                
     return {
         start: admin
     }
