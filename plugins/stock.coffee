@@ -6,13 +6,10 @@ module.exports = (app) ->
             url = "http://www.google.com/ig/api?stock=#{input.msg}"
             parse url, (err, $, data) ->
                 
-                company = ($ "company").attribs.data
-                latest = ($ "last").attribs.data
-                ticker = ($ "symbol").attribs.data
-                change = ($ "change").attribs.data
+                @[x] = ($ x).attribs.data for x in ['company', 'last', 'symbol', 'change']
                 
-                text = if latest and company
-                    "#{company} (#{ticker}): $#{latest} (#{change})" 
+                text = if @last and @company
+                    "#{@company} (#{@symbol}): $#{@last} (#{@change})" 
                 else
                     "Couldn't get the value of ticker symbol #{input.msg}"
                 nous.say input.to, text
