@@ -1,6 +1,6 @@
 module.exports = (app) ->
     {command, parse} = app.util
-
+    
     isit = (nous) ->
         command nous, "isit", (input) ->
             switch input.msg
@@ -18,11 +18,8 @@ module.exports = (app) ->
                     selector = "#answer"
 
             parse url, (err, $, data) ->
-                quote = $(selector).text
-            if quote
-                nous.say input.to, "#{quote}"
-            else
-                nous.say input.to, "Sorry, I have no idea"
+                quote = $(selector)?.text || "Sorry, I have no idea"
+                nous.say input.to, quote
 
     return {
         start: isit
