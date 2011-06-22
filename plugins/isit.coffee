@@ -1,26 +1,29 @@
 module.exports = (app) ->
-    return {
-        start: (nous) ->
-            app.util.command nous, "isit", (input) ->
-                switch input.msg
-                    when "monday"
-                        url = "http://isitmondaynow.com/"
-                        selector = "h2"
-                    when "halloween"
-                        url = "http://isithalloween.com/"
-                        selector = "h1"
-                    when "friday"
-                        url = "http://isitfriday.biz/"
-                        selector = "#yesOrNo"
-                    else
-                        url = "http://isitchristmas.com/"
-                        selector = "#answer"
+    {command, parse} = app.util
 
-                app.util.parse url, (err, $, data) ->
-                    quote = $(selector).text
-                if quote
-                    nous.say input.to, "#{quote}"
+    isit = (nous) ->
+        command nous, "isit", (input) ->
+            switch input.msg
+                when "monday"
+                    url = "http://isitmondaynow.com/"
+                    selector = "h2"
+                when "halloween"
+                    url = "http://isithalloween.com/"
+                    selector = "h1"
+                when "friday"
+                    url = "http://isitfriday.biz/"
+                    selector = "#yesOrNo"
                 else
-                    nous.say input.to, "Sorry, I have no idea"
-    }
+                    url = "http://isitchristmas.com/"
+                    selector = "#answer"
 
+            parse url, (err, $, data) ->
+                quote = $(selector).text
+            if quote
+                nous.say input.to, "#{quote}"
+            else
+                nous.say input.to, "Sorry, I have no idea"
+
+    return {
+        start: isit
+    }

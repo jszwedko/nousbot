@@ -1,7 +1,8 @@
-EventEmitter = require('events').EventEmitter
+{EventEmitter} = require 'events'
 
 module.exports = class Bot extends EventEmitter
     constructor: (@base_path, @config) ->
+        process.nous = @
         @lib_path = "#{@base_path}/lib"
         @plugin_path = "#{@base_path}/plugins"
         
@@ -11,7 +12,7 @@ module.exports = class Bot extends EventEmitter
         
         @_ = require 'underscore'
         @fs = require 'fs'
-        @irc = require 'irc'        
+        @irc = require 'irc'
         @express = require 'express'
         
         @util       = require "#{@lib_path}/util"
@@ -26,13 +27,21 @@ module.exports = class Bot extends EventEmitter
             @app_log.debug "=============== Loading Plugins==============="
             # loop through the plugins dir
             @fs.readdirSync("#{@plugin_path}").sort().forEach (plugin) =>
-                @app_log.debug "Loading plugin #{plugin}"
                 try
                     # look for .coffee files
                     if plugin.match /^.*\.coffee$/
                         plugin = plugin.replace ".coffee", ""
                         # push matched plugins
-                        @plugins[plugin] = require("#{@plugin_path}/#{plugin}")(@)
+                        path = "#{@plugin_path}/#{plugin}"
+                        @plugins[plugin] = -> require(path)(process.nous)
+                        @app_log.debug "Loading plugin #{plugin}"
+                    else if plugin.match /^.*\.js$/
+                        # favor coffee over js, but allow vanilla js plugins
+                        plugin = plugin.replace ".js", ""
+                        if not @plugins[plugin]
+                            path = "#{@plugin_path}/#{plugin}"
+                            @plugins[plugin] = -> require(path)(process.nous)
+                            @app_log.debug "Loading plugin #{plugin}"
                 catch exp
                     @app_log.error exp
                     throw exp
@@ -49,10 +58,10 @@ module.exports = class Bot extends EventEmitter
         do =>
             for name, loader of @plugins # loop over plugins
                 try
-                    name = loader() # and load each plugin
-                    name.start(@clients[id])
+                    (loader()).start @clients[id] # and load each plugin
                 catch err
                     @app_log.warn "failed to load plugin #{name}"
+                    console.log err
         
         @emit 'connect', id, @clients[id]
         
@@ -66,34 +75,3 @@ module.exports = class Bot extends EventEmitter
         
     rawHandler: (message) =>
         @app_log.debug "RAW: #{message.command} #{message.args.join ' '}"
-        
-                
-        
-
-###
-# load the project configuration
-{config} = require "./config" # pull config out of config file
-{network} = config # pull the values out of config 
-{server, nick, opts} = network
-
-# load project dependencies
-irc = require "irc"
-fs = require "fs"
-
-# define the connection method
-connect = ->
-  console.log "Attempting to connect to #{server} as #{nick}"
-  console.log "this may take a while..."
-  new irc.Client server, nick, opts
-
-plugins = {} # create an empty object for pushing to
-
-
-nous = connect() # create the irc connection
-for name, loader of plugins # loop over plugins
-  try
-    name = loader() # and load each plugin
-    name.start(nous)
-  catch err
-    console.log "failed to load plugin #{name}"
-###
