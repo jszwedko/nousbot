@@ -15,10 +15,10 @@ module.exports = class Bot extends EventEmitter
         @irc = require 'irc'
         @express = require 'express'
         
-        @util       = require "#{@lib_path}/util"
+        @util = require "#{@lib_path}/util"
         
         @command = require("#{@lib_path}/util").command
-        @parse   = require("#{@lib_path}/util").parse
+        @parse = require("#{@lib_path}/util").parse
         
         @plugins = {}
         @clients = {}
