@@ -1,5 +1,3 @@
-http://tinyurl.com/create.php?source=indexpage&url={url}&submit=Make+TinyURL!&alias=
-
 module.exports = (app) ->
     {command, parse} = app.util
 
