@@ -10,11 +10,16 @@ ensure your log dir exists and is writeable
 requirements are listed in package.json
 
 contributors:
-  eggsby
-  tanepiper
+    eggsby
+    tanepiper
 
 plugins:
-  protomega (stock, tinyurl)
-  TheEternalAbyss (urban prototype)
-  stenehall (isit)
-  joshmanders (weather)
+    protomega (stock, tinyurl)
+    TheEternalAbyss (urban prototype)
+    stenehall (isit)
+    joshmanders (weather)
+
+known issues: 
+    multiple networks aren't yet supported (but multiple channels is)
+    uncaught plugin errors crash entire process
+
