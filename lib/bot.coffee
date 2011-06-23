@@ -60,7 +60,8 @@ module.exports = class Bot extends EventEmitter
         do =>
             for name, loader of @plugins # loop over plugins
                 try
-                    (loader()).start @clients[id] # and load each plugin
+                    @plugins[name] = loader()
+                    @plugins[name].start @clients[id] # and load each plugin
                 catch err
                     @app_log.warn "failed to load plugin #{name}"
                     console.log err
