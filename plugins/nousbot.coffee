@@ -13,17 +13,22 @@ module.exports = (app) ->
     
     nousbot = (nous) ->
         docs =
-            help: "No help documents yet, hold tight."
+            help: "!help [plugins] -- show help information"
             about: "Open sores coffescript/js/nodejs IRC bot maintained by eggsby and freenode#web users."
+
         command nous, "help", docs.help, (input) ->
+            reply = "#{input.from}: No help documents for #{input.msg}"
             switch input.msg
                 when 'plugins'
-                    nous.say input.to, "#{input.from}: You can read about creating plugins here: https://github.com/eggsby/nousbot/wiki/writing-plugins"
+                    reply = "#{input.from}: You can read about creating plugins here: https://github.com/eggsby/nousbot/wiki/writing-plugins"
+            nous.say input.to, reply
             
         command nous, "about", docs.about, (input) ->
+            reply = "#{input.from}: No information about #{input.msg}"
             switch input.msg
                 when 'nousbot'
-                    nous.say input.to, "#{input.from}: https://github.com/eggsby/nousbot"
+                    reply = "#{input.from}: https://github.com/eggsby/nousbot"
+            nous.say input.to, reply
             
     return {
         start: nousbot

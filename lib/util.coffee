@@ -15,8 +15,8 @@ module.exports = (app) ->
                     from: from
                     to: to
                 callback input
-            else if msg.match RegExp "#{app.config.leader + pattern}"
-                nous.say to, doc
+            else if msg.match RegExp "^#{app.config.leader + pattern}$"
+                nous.say to, "#{from}: #{doc}"
 
         nous.addListener "message", onCommand
 
