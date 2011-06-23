@@ -2,22 +2,19 @@ nousbot is a simple coffeescript/node.js irc bot meant to do useful things
 
 not ready yet, but hopefully will be soon :)
 currently only supports basic functionality
-admin commands, screen scraping 
+admin commands, screen scraping, events!
 
 be sure to copy the config.coffee.defaults to config.coffee and update the file
+ensure your log dir exists and is writeable
 
-requirements:
-  node.js                         |   runtime
-  node_redis (npm install redis)  |   storage
-  node-irc (npm install irc)      |   irc interactions
-  winston (npm install winston)   |   logging
-  node.io (npm install node.io)   |   sceen scraping
+requirements are listed in package.json
 
 contributors:
   eggsby
   tanepiper
 
 plugins:
-  protomega (stock.py tweaks)
+  protomega (stock, tinyurl)
   TheEternalAbyss (urban prototype)
   stenehall (isit)
+  joshmanders (weather)

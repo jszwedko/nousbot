@@ -15,10 +15,7 @@ module.exports = class Bot extends EventEmitter
         @irc = require 'irc'
         @express = require 'express'
         
-        @util = require "#{@lib_path}/util"
-        
-        @command = require("#{@lib_path}/util").command
-        @parse = require("#{@lib_path}/util").parse
+        @util = require("#{@lib_path}/util") @
         
         @plugins = {}
         @clients = {}
@@ -74,10 +71,6 @@ module.exports = class Bot extends EventEmitter
         
         for channel in @config.network.opts.channels
             channel_logger = @logger channel
-            @clients[id].addListener "message#{channel}", (from, message) ->
-                channel_logger.info "#{from} - #{message}"
-        
-            
         
         
     errorHandler: (error) =>
