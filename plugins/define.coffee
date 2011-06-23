@@ -4,7 +4,8 @@ module.exports = (app) ->
     {command, parse} = app.util
     
     define = (nous) ->
-        command nous, "define", (input) ->
+        doc = "!define <word> -- searches ninjawords.com for the word and returns the result."
+        command nous, "define", doc, (input) ->
             url = "http://ninjawords.com/#{(encodeURIComponent input.msg)}"
             parse url, (err, $, data) ->
                 try

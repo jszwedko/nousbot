@@ -12,7 +12,8 @@ module.exports = function(app) {
   xml = app.util.xml;
 
   weather = function(nous) {
-    return command(nous, "weather", function(input) {
+    var doc = "!weather <city|postal code> -- returns the current weather."
+    return command(nous, "weather", doc, function(input) {
       var url, urisafe;
 
       urisafe = encodeURIComponent(input.msg);

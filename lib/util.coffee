@@ -4,7 +4,7 @@ module.exports = (app) ->
     {Parser} = require "xml2js"
     options = {}
 
-    command = (nous, pattern, callback) ->
+    command = (nous, pattern, doc, callback) ->
         regex = "^#{app.config.leader + pattern}\ (.*)"
 
         onCommand = (from, to, msg) ->
@@ -15,6 +15,8 @@ module.exports = (app) ->
                     from: from
                     to: to
                 callback input
+            else if msg.match RegExp "#{app.config.leader + pattern}"
+                nous.say to, doc
 
         nous.addListener "message", onCommand
 

@@ -4,7 +4,11 @@ module.exports = (app) ->
     {command} = app.util
     
     admin = (nous) ->
-        command nous, "kick", (input) ->
+        docs =
+            kick: "!kick <nick> (optionally may provide a reason) -- kicks user from channel"
+            ban: "!ban <nick> (optionally may provide a reason) -- bans user from channel"
+            unban: "!unban <nick> -- unbans the provided nick"
+        command nous, "kick", docs.kick, (input) ->
             if input.from in admins
                 match = input.msg.match /([\w-]+)\ ?(.*)/
                 if match.length > 2 and match[2]
@@ -15,7 +19,7 @@ module.exports = (app) ->
                     reason = "you are a terrible person"
                 nous.say input.to, "screw you #{user}"
                 nous.send "kick", input.to, user, reason
-        command nous, "ban", (input) ->
+        command nous, "ban", docs.ban, (input) ->
             if input.from in admins
                 match = input.msg.match /([\w-]+)\ ?(.*)/
                 if match.length > 2 and match[2]
@@ -27,7 +31,7 @@ module.exports = (app) ->
                 nous.say input.to, "gtfo #{input.msg}"
                 nous.send "MODE", input.to, "+b", user, reason
                 nous.send "kick", input.to, user, reason
-        command nous, "unban", (input) ->
+        command nous, "unban", docs.unban, (input) ->
             if input.from in admins
                 nous.say input.to, "mehh...."
                 nous.send "MODE", input.to, "-b", input.msg

@@ -2,7 +2,8 @@ module.exports = (app) ->
     {command, parse} = app.util
     
     isit = (nous) ->
-        command nous, "isit", (input) ->
+        doc = "!isit [monday|halloween|friday] -- checks to see if it is..."
+        command nous, "isit", doc, (input) ->
             switch input.msg
                 when "monday"
                     url = "http://isitmondaynow.com/"

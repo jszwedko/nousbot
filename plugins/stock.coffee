@@ -2,7 +2,8 @@ module.exports = (app) ->
     {command, parse, xml} = app.util
     
     stock = (nous) ->
-        command nous, "stock", (input) ->
+        doc = "!stock <ticker> -- searches google for the current stock value."
+        command nous, "stock", doc, (input) ->
             url = "http://www.google.com/ig/api?stock=#{input.msg}"
             parse url, (err, $, data) ->
                 {finance} = xml(data) #pull the finance object out of the xml data
