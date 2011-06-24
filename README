@@ -22,4 +22,5 @@ plugins:
 known issues: 
     multiple networks aren't yet supported (but multiple channels is)
     uncaught plugin errors crash entire process
+    logging isn't working as expected, logging everything from any channel
 
