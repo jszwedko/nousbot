@@ -2,6 +2,7 @@ module.exports = (app) ->
     {config} = app
     {admins} = config
     {command} = app.util
+    reg = /([\w\d-{\\}]+)\ ?(.*)/
     
     admin = (nous) ->
         docs =
@@ -10,7 +11,7 @@ module.exports = (app) ->
             unban: "!unban <nick> -- unbans the provided nick"
         command nous, "kick", docs.kick, (input) ->
             if input.from in admins
-                match = input.msg.match /([\w-]+)\ ?(.*)/
+                match = input.msg.match reg
                 if match.length > 2 and match[2]
                     user = match[1]
                     reason = match[2]
@@ -21,7 +22,7 @@ module.exports = (app) ->
                 nous.send "kick", input.to, user, reason
         command nous, "ban", docs.ban, (input) ->
             if input.from in admins
-                match = input.msg.match /([\w-]+)\ ?(.*)/
+                match = input.msg.match reg
                 if match.length > 2 and match[2]
                     user = match[1]
                     reason = match[2]
