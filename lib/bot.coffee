@@ -20,6 +20,8 @@ module.exports = class Bot extends EventEmitter
         @plugins = {}
         @clients = {}
         @destroy = {}
+
+        @makeGlobals()
         
         do =>
             @app_log.debug "=============== Loading Plugins==============="
@@ -44,6 +46,10 @@ module.exports = class Bot extends EventEmitter
                 catch exp
                     @app_log.error exp
                     throw exp
+
+    makeGlobals: -> # raise a few things to global scope for easy plugin access
+        global.u = @util
+        # later we should make the redis wrapper global
                         
     connect: (id, options) ->
         @emit 'preconnect', id
@@ -53,6 +59,7 @@ module.exports = class Bot extends EventEmitter
         @app_log.info "Attempting to connect to #{options.server} as #{options.nick}"
         @app_log.debug "this may take a while..."
         @clients[id] = new @irc.Client options.server, options.nick, options.opts
+        @clients[id].setMaxListeners 150
         
         do =>
             for name, loader of @plugins # loop over plugins
@@ -67,7 +74,6 @@ module.exports = class Bot extends EventEmitter
         
         @clients[id].addListener 'error', @errorHandler
         @clients[id].addListener 'raw', @rawHandler if @config.debug
-        @clients[id].setMaxListeners 150
         
         for channel in @config.network.opts.channels
             channel_logger = @logger channel

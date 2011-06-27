@@ -1,12 +1,11 @@
 module.exports = (app) ->
-    {command, parse, xml} = app.util
     
     stock = (nous) ->
         doc = "!stock <ticker> -- searches google for the current stock value."
-        command nous, "stock", doc, (input) ->
+        u.command nous, "stock", doc, (input) ->
             url = "http://www.google.com/ig/api?stock=#{input.msg}"
-            parse url, (err, $, data) ->
-                {finance} = xml(data) #pull the finance object out of the xml data
+            u.parse url, (err, $, data) ->
+                {finance} = u.xml(data) #pull the finance object out of the xml data
                 results = {}
                 
                 results[x] = finance[x]["@"]["data"] for x in ['company', 'last', 'symbol', 'change']
