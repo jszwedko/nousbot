@@ -12,9 +12,7 @@ module.exports = (app) ->
     {command, parse} = app.util
     
     memes = (nous) ->
-        docs = "Y U NO UNDERSTAND MEMES?!?"
-
-        command nous, "derp", docs, (input) ->
+        command nous, "derp", docs=false, (input) ->
             parse "http://api.automeme.net/text?lines=1", (err, $, data) ->
                 nous.say input.to, data
             

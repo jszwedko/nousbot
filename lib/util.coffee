@@ -8,15 +8,18 @@ module.exports = (app) ->
         regex = "^#{app.config.leader + pattern}\ (.*)"
 
         onCommand = (from, to, msg) ->
+            input =
+                from: from
+                to: to
             match = msg.match RegExp(regex)
             if match
-                input =
-                    msg: match[1]
-                    from: from
-                    to: to
+                input["msg"] = match[1]
                 callback input
             else if msg.match RegExp "^#{app.config.leader + pattern}$"
-                nous.say to, "#{from}: #{doc}"
+                if doc
+                    nous.say to, "#{from}: #{doc}"
+                else
+                    callback input
 
         nous.addListener "message", onCommand
 

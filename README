@@ -20,7 +20,15 @@ plugins:
     joshmanders (weather)
 
 known issues: 
-    multiple networks aren't yet supported (but multiple channels is)
-    uncaught plugin errors crash entire process
+    multiple networks aren't yet supported (but multiple channels works)
+    uncaught plugin errors crash entire process (fix this with a try/catch)
     logging isn't working as expected, logging everything from any channel
 
+TODO
+    fix logging
+    implement global redis object for set/get
+    create a way to see active plugins
+    finish plugin hotloading/unloading
+    proper documentation
+    --------
+    web ui
