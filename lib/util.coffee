@@ -44,8 +44,8 @@ module.exports = (app) ->
         return json
 
     striptags = (string) ->
-        string.replace /(<([^>]+)>)/ig, "" # replace all xml tags with empty strings
-        string.replace /\s+/, " " # replace multiple spaces with a single space
+        string = string.replace /(<([^>]+)>)/ig, "" # replace all xml tags with empty strings
+        string = string.replace /\s+/g, " " # replace multiple spaces with a single space and return
 
     start = (nous) ->
         console.log "loaded plugin utility..."
