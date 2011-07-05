@@ -43,6 +43,10 @@ module.exports = (app) ->
         parser.parseString xml
         return json
 
+    striptags = (string) ->
+        string.replace /(<([^>]+)>)/ig, "" # replace all xml tags with empty strings
+        string.replace /\s+/, " " # replace multiple spaces with a single space
+
     start = (nous) ->
         console.log "loaded plugin utility..."
 
@@ -51,4 +55,5 @@ module.exports = (app) ->
         xml: xml
         parse: parse
         command: command
+        striptags: striptags
     }
