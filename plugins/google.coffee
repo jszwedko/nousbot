@@ -11,14 +11,14 @@ module.exports = (app) ->
             searchURL = url "web", input.msg
             u.parse searchURL, (err, $, data) ->
                 response = JSON.parse data
-                if response.responseData?.results?
+                if response?.responseData?.results[0]?
                     result = response.responseData.results[0]
                     result[x] = unescape x for x in result
                     {titleNoFormatting, content, unescapedUrl} = result
                     content = u.striptags content
                     results = "#{unescapedUrl} - #{titleNoFormatting} -- #{content}"
                 else
-                    results = "something else."
+                    results = "No results found for #{input.msg}."
                 nous.say input.to, results
 
     return {
