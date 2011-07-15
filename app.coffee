@@ -1,9 +1,5 @@
-{config} = require './config'
-Bot = require './lib/bot'
+Bot = require "./lib/bot"
+config = require "./config"
 
-bot = new Bot __dirname, config
-
-bot.on 'connect', (id, connection) ->
-    console.log "#{id} server started"
-
-bot.connect "nous bot"
+nous =  new Bot __dirname, config
+nous.connect()

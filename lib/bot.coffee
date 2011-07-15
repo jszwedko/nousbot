@@ -1,88 +1,69 @@
-{EventEmitter} = require 'events'
+# nousbot, evented to the core 8)
+{EventEmitter} = require "events"
+irc = require "irc"
+Sieve = require "./sieve"
+
+# for now, nousbot will only support one irc connection (one network)
+# hopefully someone can think of an elegant way to change this in the future
 
 module.exports = class Bot extends EventEmitter
-    constructor: (@base_path, @config) ->
-        process.nous = @
-        @lib_path = "#{@base_path}/lib"
-        @plugin_path = "#{@base_path}/plugins"
-        
-        @logger = require("#{@lib_path}/logger") @
-        
-        @app_log = @logger "main-log"
-        
-        @_ = require 'underscore'
-        @fs = require 'fs'
-        @irc = require 'irc'
-        @express = require 'express'
-        
-        @util = require("#{@lib_path}/util") @
-        
+    constructor: (@dir, @config) ->
+        # A bot should be passed a working dir and a configuration object
+        @fs = require "fs"
+        @makeGlobal() # Make nous global for use across the process
+        @findPlugins() # Find possible plugins
+
+    makeGlobal: ->
+        # Turn the bot into a global notifier.
+        # We'll use this to control our producer/consumer callbacks
+        global.nous ?= process.nous ?= this
+
+    findPlugins: ->
+        # currently, nous can only find new plugins at startup
+        @pluginList = []
+        @fs.readdirSync("#{@dir}/plugins").sort().forEach (plugin) =>
+            if plugin.match /^.*\.coffee$/
+                @pluginList.push plugin.replace ".coffee", ""
+
+    initPlugins: ->
+        # require the plugins and put them in our plugins object
         @plugins = {}
-        @clients = {}
-        @destroy = {}
+        for plugin in @pluginList
+            @plugins[plugin] = require "#{@dir}/plugins/#{plugin}"
+            @loadPlugin @irc, @plugins[plugin]
 
-        @makeGlobals()
-        
-        do =>
-            @app_log.debug "=============== Loading Plugins==============="
-            # loop through the plugins dir
-            @fs.readdirSync("#{@plugin_path}").sort().forEach (plugin) =>
-                try
-                    # look for .coffee files
-                    if plugin.match /^.*\.coffee$/
-                        plugin = plugin.replace ".coffee", ""
-                        # push matched plugins
-                        if plugin not in @config.plugins.blacklist
-                            path = "#{@plugin_path}/#{plugin}"
-                            @plugins[plugin] = -> require(path)(process.nous)
-                            @app_log.debug "Loading plugin #{plugin}"
-                    else if plugin.match /^.*\.js$/
-                        # favor coffee over js, but allow vanilla js plugins
-                        plugin = plugin.replace ".js", ""
-                        if not @plugins[plugin] and plugin not in @config.plugins.blacklist
-                            path = "#{@plugin_path}/#{plugin}"
-                            @plugins[plugin] = -> require(path)(process.nous)
-                            @app_log.debug "Loading plugin #{plugin}"
-                catch exp
-                    @app_log.error exp
-                    throw exp
+    loadPlugin: (connection, plugin) ->
+        # can't quite think of what this should do....
+        connection.addListener "message", (from, to, msg) =>
+            if @sieve.filter from, to, plugin.info.name
+                # ball up an environment object to ship to the plugin
+                env = {}
+                env.from = from
+                env.to = to
+                env.message = msg
+                for sub in plugin.subscriptions
+                    try
+                        sub.apply plugin, [env]
+                    catch err
+                        console.log "Oops! Looks like there was a problem with #{plugin.info.name}..."
+                        @errorHandler err
 
-    makeGlobals: -> # raise a few things to global scope for easy plugin access
-        global.u = @util
-        # later we should make the redis wrapper global
-                        
-    connect: (id, options) ->
-        @emit 'preconnect', id
-        
-        options ?= @config.network
-        
-        @app_log.info "Attempting to connect to #{options.server} as #{options.nick}"
-        @app_log.debug "this may take a while..."
-        @clients[id] = new @irc.Client options.server, options.nick, options.opts
-        @clients[id].setMaxListeners 150
-        
-        do =>
-            for name, loader of @plugins # loop over plugins
-                try
-                    @plugins[name] = loader()
-                    @plugins[name].start @clients[id] # and load each plugin
-                catch err
-                    @app_log.warn "failed to load plugin #{name}"
-                    console.log err
-        
-        @emit 'connect', id, @clients[id]
-        
-        @clients[id].addListener 'error', @errorHandler
-        @clients[id].addListener 'raw', @rawHandler if @config.debug
-        
-        for channel in @config.network.opts.channels
-            channel_logger = @logger channel
-        
-        
-    errorHandler: (error) =>
-        @app_log.error "ERROR: #{error.command} #{error.args.join ' '}"
-        @emit 'error', error, this
-        #return error
-        
+    errorHandler: (err) =>
+        console.log "ERROR: #{err}"
+
     rawHandler: (message) =>
-        @app_log.debug "RAW: #{message.command} #{message.args.join ' '}"
+        console.log "RAW: #{message}"
+
+    connect: ->
+        # connect to the irc server and spin up the chains
+        options = @config.network
+        console.log "attempting to connect to irc...."
+
+        @irc = new irc.Client options.server, options.nick, options.opts
+        @irc.setMaxListeners 512
+
+        @irc.addListener "error", @errorHandler
+        @irc.addListener "raw", @rawHandler if @config.debug
+
+        @initPlugins()
+        @sieve = new Sieve @config, (p for p of @plugins)
