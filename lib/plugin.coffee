@@ -9,3 +9,9 @@ module.exports = class Plugin
 
     say: (msg, env) ->
         nous.irc.say env.to, "#{env.from}: #{msg}"
+
+    set: (key, val) ->
+        nous.redis.client.set "nous-#{key}", val
+
+    get: (key, cb) ->
+        nous.redis.client.get "nous-#{key}", cb

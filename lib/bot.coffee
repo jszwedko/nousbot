@@ -45,14 +45,21 @@ module.exports = class Bot extends EventEmitter
                     try
                         sub.apply plugin, [env]
                     catch err
-                        console.log "Oops! Looks like there was a problem with #{plugin.info.name}..."
-                        @errorHandler err
+                        if @config.debug
+                            throw err
+                        else
+                            console.log "Oops! Looks like there was a problem with #{plugin.info.name}..."
+                            @errorHandler err
 
     errorHandler: (err) =>
         console.log "ERROR: #{err}"
 
     rawHandler: (message) =>
-        console.log "RAW: #{message}"
+        console.log "RAW: #{message.command} #{message.args.join ' '}"
+
+    startRedis: ->
+        Redis = require "./redis.coffee"
+        @redis = new Redis
 
     connect: ->
         # connect to the irc server and spin up the chains
@@ -65,5 +72,6 @@ module.exports = class Bot extends EventEmitter
         @irc.addListener "error", @errorHandler
         @irc.addListener "raw", @rawHandler if @config.debug
 
+        @startRedis()
         @initPlugins()
         @sieve = new Sieve @config, (p for p of @plugins)

@@ -1,5 +1,6 @@
 module.exports =
     leader: "`"
+    # debug: "true"
     network:
         server: "irc.freenode.net"
         nick: "nous-v2"
