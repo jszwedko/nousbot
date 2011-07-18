@@ -4,7 +4,7 @@ Plugin = require "../lib/plugin"
 setInfo =
     name: "set"
     trigger: "set"
-    doc: "sets a key to be retrieved"
+    doc: "'set <key> <val>' sets a key to the given value"
 
 set = (env) ->
     match = @matchTrigger env
@@ -23,7 +23,7 @@ set = (env) ->
 getInfo =
     name: "get"
     trigger: "get"
-    doc: "gets a key that was set in the channel"
+    doc: "'get <key>' gets a key that was previously set"
 
 get = (env) ->
     match = @matchTrigger env

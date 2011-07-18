@@ -1,8 +1,9 @@
 Plugin = require "../lib/plugin"
 
-name = "square"
-trigger = "sqr"
-doc = "squares a number"
+info =
+  name: "square"
+  trigger: "sqr"
+  doc: "'sqr <number>' returns the squares of a number"
 
 square = (env) ->
     match = @matchTrigger env
@@ -13,4 +14,4 @@ square = (env) ->
             @say env, match * match
 
 module.exports =
-    square: new Plugin {name, trigger, doc}, square
+    square: new Plugin info, square

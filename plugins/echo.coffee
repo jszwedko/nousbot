@@ -1,8 +1,9 @@
 Plugin = require "../lib/plugin"
 
-name = "echo"
-trigger = "echo"
-doc = "echos input in channel"
+info =
+  name: "echo"
+  trigger: "echo"
+  doc: "'echo <msg>' echos msg to the channel"
 
 echo = (env) ->
     match = @matchTrigger env
@@ -10,4 +11,4 @@ echo = (env) ->
         @say env, match
 
 module.exports =
-    echo: new Plugin {name, trigger, doc}, echo
+    echo: new Plugin info, echo
