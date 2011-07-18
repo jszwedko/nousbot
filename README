@@ -2,4 +2,6 @@ nous v2, rewriiiiteeee
 
 current deps:
   node.js
+  redis
   npm install irc
+  npm install redis
