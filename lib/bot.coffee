@@ -29,8 +29,10 @@ module.exports = class Bot extends EventEmitter
         # require the plugins and put them in our plugins object
         @plugins = {}
         for plugin in @pluginList
-            @plugins[plugin] = require "#{@dir}/plugins/#{plugin}"
-            @loadPlugin @irc, @plugins[plugin]
+            pluginModule = require "#{@dir}/plugins/#{plugin}"
+            for plugin of pluginModule
+                @plugins[plugin] = pluginModule[plugin]
+                @loadPlugin @irc, @plugins[plugin]
 
     loadPlugin: (connection, plugin) ->
         # can't quite think of what this should do....

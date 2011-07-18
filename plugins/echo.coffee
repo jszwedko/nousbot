@@ -10,4 +10,4 @@ echo = (env) ->
         @say match, env
 
 module.exports =
-    new Plugin {name, trigger, doc}, echo
+    echo: new Plugin {name, trigger, doc}, echo

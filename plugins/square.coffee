@@ -13,4 +13,4 @@ square = (env) ->
             @say match * match, env
 
 module.exports =
-    new Plugin {name, trigger, doc}, square
+    square: new Plugin {name, trigger, doc}, square
