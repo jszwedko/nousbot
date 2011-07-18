@@ -29,10 +29,18 @@ module.exports = class Bot extends EventEmitter
         # require the plugins and put them in our plugins object
         @plugins = {}
         for plugin in @pluginList
-            pluginModule = require "#{@dir}/plugins/#{plugin}"
-            for plugin of pluginModule
-                @plugins[plugin] = pluginModule[plugin]
-                @loadPlugin @irc, @plugins[plugin]
+            try
+                pluginModule = require "#{@dir}/plugins/#{plugin}"
+                for plugin of pluginModule
+                    if @plugins[plugin]
+                        console.log "Looks like the plugin namespace #{plugin} is used more than once..."
+                    else
+                        @plugins[plugin] = pluginModule[plugin]
+                        @loadPlugin @irc, @plugins[plugin]
+            catch err
+                console.log "There was a problem loading #{plugin}"
+                @errorHandler err
+                
 
     loadPlugin: (connection, plugin) ->
         # can't quite think of what this should do....
