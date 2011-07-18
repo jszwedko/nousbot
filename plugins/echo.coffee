@@ -7,7 +7,7 @@ doc = "echos input in channel"
 echo = (env) ->
     match = @matchTrigger env
     if match?
-        @say match, env
+        @say env, match
 
 module.exports =
     echo: new Plugin {name, trigger, doc}, echo

@@ -8,9 +8,9 @@ square = (env) ->
     match = @matchTrigger env
     if match?
         if isNaN parseInt match
-            @say "Square needs to be passed an integer...", env
+            @say env, "Square needs to be passed an integer..."
         else
-            @say match * match, env
+            @say env, match * match
 
 module.exports =
     square: new Plugin {name, trigger, doc}, square

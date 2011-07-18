@@ -7,11 +7,11 @@ module.exports = class Plugin
         matches = message.match pattern
         matches[1] if matches?[1]?
 
-    say: (msg, env) ->
+    say: (env, msg) ->
         nous.irc.say env.to, "#{env.from}: #{msg}"
 
-    set: (key, val) ->
-        nous.redis.client.set "nous-#{key}", val
+    set: (env, key, val) ->
+        nous.redis.client.set "nous-#{env.to}-#{key}", val
 
-    get: (key, cb) ->
-        nous.redis.client.get "nous-#{key}", cb
+    get: (env, key, cb) ->
+        nous.redis.client.get "nous-#{env.to}-#{key}", cb

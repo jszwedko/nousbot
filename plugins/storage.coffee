@@ -13,10 +13,10 @@ set = (env) ->
         if match?
             key = match[1]
             val = match[2]
-            @set key, val
-            @say "Successfully set #{key} to \"#{val}\"", env
+            @set env, key, val
+            @say env, "Successfully set #{key} to \"#{val}\""
         else
-            @say "Oops, set needs both a key AND a value...", env
+            @say env, "Oops, set needs both a key AND a value..."
 
 
 # get plugin setup
@@ -28,12 +28,12 @@ getInfo =
 get = (env) ->
     match = @matchTrigger env
     if match?
-        @get match, (err, res) =>
+        @get env, match, (err, res) =>
             throw err if err
             if res?
-                @say res, env
+                @say env, res
             else
-                @say "No key found for #{match}", env
+                @say env, "No key found for #{match}"
 
 module.exports =
     set: new Plugin setInfo, set
