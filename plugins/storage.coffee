@@ -13,7 +13,7 @@ set = (env) ->
         if match?
             key = match[1]
             val = match[2]
-            @set env, key, val
+            @set env, "storage-#{key}", val
             @say env, "Successfully set #{key} to \"#{val}\""
         else
             @say env, "Oops, set needs both a key AND a value..."
@@ -28,7 +28,7 @@ getInfo =
 get = (env) ->
     match = @matchTrigger env
     if match?
-        @get env, match, (err, res) =>
+        @get env, "storage-#{match}", (err, res) =>
             throw err if err
             if res?
                 @say env, res
