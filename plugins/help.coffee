@@ -3,7 +3,8 @@ Plugin = require "../lib/plugin"
 info =
   name: "help"
   trigger: "help"
-  doc: "does helpful stuff, call help <plugin> for help on a specific plugin"
+  doc: "does helpful stuff, call 'help <plugin>' for help on a specific plugin" +
+       " or 'help all' for more information"
 
 help = (env) ->
     if @triggerOnly env
@@ -21,7 +22,11 @@ help = (env) ->
             else if match is "all"
                 @say env, "nousbot is an open source bot written in coffeescript, " +
                      "maintained by members of freenode#web. https://github.com/eggsby/nousbot/"
-                @say env, "Plugins enabled in #{env.to}: #{(nous.sieve.map[env.to].join ", ")}"
+                if nous.sieve.map[env.to]?
+                    list = nous.sieve.map[env.to].join ", "
+                else
+                    list = (k for k of nous.plugins).join ", "
+                @say env, "Plugins enabled in #{env.to}: #{list}"
             else
                 @say env, "Oops, couldn't find any help for #{match}"
 

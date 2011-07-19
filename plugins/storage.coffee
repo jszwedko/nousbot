@@ -22,11 +22,12 @@ set = (env) ->
 # get plugin setup
 getInfo =
     name: "get"
-    trigger: "get"
-    doc: "'get <key>' gets a key that was previously set"
+    doc: "'?<key>' gets a key that was previously set"
 
 get = (env) ->
-    match = @matchTrigger env
+    pattern = new RegExp "^\\?(\\S+)"
+    match = env.message.match pattern
+    match = if match?[1]? then match[1] else null
     if match?
         @get env, "storage-#{match}", (err, res) =>
             throw err if err

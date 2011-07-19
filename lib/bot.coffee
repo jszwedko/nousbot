@@ -52,6 +52,8 @@ module.exports = class Bot extends EventEmitter
     loadPlugin: (connection, plugin) ->
         # can't quite think of what this should do....
         connection.addListener "message", (from, to, msg) =>
+            if to is @config.network.nick
+                to = from
             if @sieve.filter from, to, plugin.info.name
                 # ball up an environment object to ship to the plugin
                 env = {}
