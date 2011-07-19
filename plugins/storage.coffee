@@ -14,9 +14,9 @@ set = (env) ->
             key = match[1]
             val = match[2]
             @set env, "storage-#{key}", val
-            @say env, "Successfully set #{key} to \"#{val}\""
+            @respond env, "Successfully set #{key} to \"#{val}\""
         else
-            @say env, "Oops, set needs both a key AND a value..."
+            @respond env, "Oops, set needs both a key AND a value..."
 
 
 # get plugin setup
@@ -32,9 +32,9 @@ get = (env) ->
         @get env, "storage-#{match}", (err, res) =>
             throw err if err
             if res?
-                @say env, res
+                @respond env, res
             else
-                @say env, "No key found for #{match}"
+                @respond env, "No key found for #{match}"
 
 module.exports =
     set: new Plugin setInfo, set

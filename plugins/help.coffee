@@ -8,7 +8,7 @@ info =
 
 help = (env) ->
     if @triggerOnly env
-        @say env, @info.doc
+        @respond env, @info.doc
     else
         match = @matchTrigger env
         if match?
@@ -18,17 +18,17 @@ help = (env) ->
                 else
                     null
             if helpdoc
-                @say env, helpdoc
+                @respond env, helpdoc
             else if match is "all"
-                @say env, "nousbot is an open source bot written in coffeescript, " +
+                @respond env, "nousbot is an open source bot written in coffeescript, " +
                      "maintained by members of freenode#web. https://github.com/eggsby/nousbot/"
                 if nous.sieve.map[env.to]?
                     list = nous.sieve.map[env.to].join ", "
                 else
                     list = (k for k of nous.plugins).join ", "
-                @say env, "Plugins enabled in #{env.to}: #{list}"
+                @respond env, "Plugins enabled in #{env.to}: #{list}"
             else
-                @say env, "Oops, couldn't find any help for #{match}"
+                @respond env, "Oops, couldn't find any help for #{match}"
 
 module.exports =
     help: new Plugin info, help

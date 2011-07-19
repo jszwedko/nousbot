@@ -14,6 +14,7 @@ d = decimalToDollars = (num) ->
 bitcoin = (env) ->
     if @triggerOnly env # if the trigger is called
         @scrape url, (err, $, data) =>
+            throw err if err
             json = JSON.parse data
             {ticker} = json if json["ticker"]?
             if ticker?
@@ -22,7 +23,7 @@ bitcoin = (env) ->
                            "Low: $#{d low} - Volume: #{vol}"
             else
                 response = "Couldn't get bitcoin stats, is mt.gox down?"
-            @say env, response
+            @respond env, response
 
 module.exports = {
     bitcoin: new Plugin info, bitcoin
