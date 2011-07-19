@@ -17,7 +17,11 @@ help = (env) ->
                 else
                     null
             if helpdoc
-                @say env, "\x02#{helpdoc}\x02"
+                @say env, helpdoc
+            else if match is "all"
+                @say env, "nousbot is an open source bot written in coffeescript, " +
+                     "maintained by members of freenode#web. https://github.com/eggsby/nousbot/"
+                @say env, "Plugins enabled in #{env.to}: #{(nous.sieve.map[env.to].join ", ")}"
             else
                 @say env, "Oops, couldn't find any help for #{match}"
 

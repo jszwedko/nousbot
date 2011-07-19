@@ -32,7 +32,7 @@ module.exports = class Plugin
         json #return the json object after pushing the data to it
 
     say: (env, msg) ->
-        nous.irc.say env.to, "#{env.from}: #{msg}"
+        nous.irc.say env.to, msg
 
     set: (env, key, val) ->
         nous.redis.client.set "nous-#{env.to}-#{key}", val
