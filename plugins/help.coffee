@@ -17,7 +17,7 @@ help = (env) ->
                 else
                     null
             if helpdoc
-                @say env, helpdoc
+                @say env, "\x02#{helpdoc}\x02"
             else
                 @say env, "Oops, couldn't find any help for #{match}"
 

@@ -4,4 +4,6 @@ current deps:
   node.js
   redis
   npm install irc
+  npm install nodeio
+  npm install xml2js
   npm install redis

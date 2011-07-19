@@ -1,6 +1,10 @@
 # nousbot, evented to the core 8)
+#
+# grab our deps
 {EventEmitter} = require "events"
 irc = require "irc"
+{Parser} = require "xml2js"
+Redis = require "./redis.coffee"
 Sieve = require "./sieve"
 
 # for now, nousbot will only support one irc connection (one network)
@@ -10,6 +14,9 @@ module.exports = class Bot extends EventEmitter
     constructor: (@dir, @config) ->
         # A bot should be passed a working dir and a configuration object
         @fs = require "fs"
+        @nodeio = require "node.io"
+        @parser = new Parser()
+        @redis = new Redis
         @makeGlobal() # Make nous global for use across the process
         @findPlugins() # Find possible plugins
 
@@ -67,10 +74,6 @@ module.exports = class Bot extends EventEmitter
     rawHandler: (message) =>
         console.log "RAW: #{message.command} #{message.args.join ' '}"
 
-    startRedis: ->
-        Redis = require "./redis.coffee"
-        @redis = new Redis
-
     connect: ->
         # connect to the irc server and spin up the chains
         options = @config.network
@@ -82,6 +85,5 @@ module.exports = class Bot extends EventEmitter
         @irc.addListener "error", @errorHandler
         @irc.addListener "raw", @rawHandler if @config.debug
 
-        @startRedis()
         @initPlugins()
         @sieve = new Sieve @config, (p for p of @plugins)
