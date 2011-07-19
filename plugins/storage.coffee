@@ -4,32 +4,58 @@ Plugin = require "../lib/plugin"
 setInfo =
     name: "set"
     trigger: "set"
-    doc: "'set <key> <val>' sets a key to the given value"
+    doc: "'set <key> = <val>' sets a key to the given value, or you can use += to add to a key."
 
 set = (env) ->
     match = @matchTrigger env
     if match?
-        match = match.match /(\S+)\s(.+)/
-        if match?
+        match = match.match /(.*?)\s+(\+?=)\s+(.*)/
+        if match?[3]?
             key = match[1]
-            val = match[2]
-            @set env, "storage-#{key}", val
-            @respond env, "Successfully set #{key} to \"#{val}\""
+            safekey = key.replace /\s/g, "-"
+            value = match[3]
+            operator = match[2]
+            if operator is "="
+                @set env, "storage-#{safekey}", value
+                response = "Set '#{key}' to '#{value}'"
+            else if operator is "+="
+                @get env, "storage-#{safekey}", (err, res) =>
+                    if res?
+                        value = "#{res} #{value}"
+                    @set env, "storage-#{safekey}", value
+                response = "Added '#{value}' to '#{key}'"
         else
-            @respond env, "Oops, set needs both a key AND a value..."
+            response = "Couldn't parse a key value pair."
+        @respond env, response
 
+delInfo =
+    name: "del"
+    trigger: "del"
+    doc: "'del <key>' deletes the key from memory"
+
+del = (env) ->
+    match = @matchTrigger env
+    if match?
+        key = match.replace /\s/g, "-"
+        @get env, "storage-#{key}", (err, res) =>
+            if res?
+                @del env, "storage-#{key}"
+                response = "Deleted '#{match}: #{res}'"
+            else
+                response = "No key set for '#{match}'"
+            @respond env, response
 
 # get plugin setup
 getInfo =
     name: "get"
-    doc: "'?<key>' gets a key that was previously set"
+    trigger: "get"
+    doc: "'get <key>' gets a key that was previously set"
 
 get = (env) ->
-    pattern = new RegExp "^\\?(\\S+)"
-    match = env.message.match pattern
-    match = if match?[1]? then match[1] else null
+    match = @matchTrigger env
     if match?
-        @get env, "storage-#{match}", (err, res) =>
+        key = match.replace /\s/g, "-"
+        @get env, "storage-#{key}", (err, res) =>
             throw err if err
             if res?
                 @respond env, res
@@ -38,4 +64,5 @@ get = (env) ->
 
 module.exports =
     set: new Plugin setInfo, set
+    del: new Plugin delInfo, del
     get: new Plugin getInfo, get

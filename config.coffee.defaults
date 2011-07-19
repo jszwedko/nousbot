@@ -1,0 +1,21 @@
+module.exports =
+    leader: "."
+    # debug: "true" # uncomment for debug
+    network:
+        server: "irc.freenode.net"
+        nick: "nousbot"
+        opts:
+            channels: [
+                "##nous-test"
+            ]
+            password: ""
+            userName: "nousbot"
+            realName: "nouminos bot"
+    admins: [
+        "eggsby"
+    ]
+    blacklist:
+        plugins: {}
+        users: []
+    apikeys:
+        # lastfm: "" # uncomment and fill in key to enable plugin

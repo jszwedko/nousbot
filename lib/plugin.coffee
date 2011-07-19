@@ -4,9 +4,12 @@ module.exports = class Plugin
     matchTrigger: (env) ->
         # the info object must contain a trigger attribute for this to be used
         if @info.trigger?
-            pattern = RegExp "^\\#{nous.config.leader}#{@info.trigger}\\s(.*)$", "i"
+            pattern = new RegExp "^\\#{nous.config.leader}#{@info.trigger}\\s(.*?)\\s?(@.*)?$", "i"
             matches = env.message.match pattern
-            matches[1] if matches?[1]?
+            if matches?[1]?
+                if matches?[2]?
+                    env.from = matches[2].replace /@/, ""
+                return matches[1]
 
     # Takes an environment and checks if the message was only this plugins trigger
     triggerOnly: (env) ->
@@ -50,3 +53,6 @@ module.exports = class Plugin
 
     get: (env, key, cb) ->
         nous.redis.client.get "nous-#{env.to}-#{key}", cb
+
+    del: (env, key) ->
+        nous.redis.client.del "nous-#{env.to}-#{key}"
