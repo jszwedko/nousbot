@@ -48,11 +48,20 @@ del = (env) ->
 # get plugin setup
 getInfo =
     name: "get"
-    trigger: "get"
-    doc: "'get <key>' gets a key that was previously set"
+    doc: "'?<key>' gets a key that was previously set"
 
 get = (env) ->
-    match = @matchTrigger env
+    # use ?<key> and optionally ?<key> @<user>
+    match = env.message.match /^\?(.*?)\s?(@.*)?$/
+    match =
+        if match?[1]?
+            if match?[2]?
+                user = match[2].replace /@/, ""
+                user = user.replace /\s+/, ""
+                env.from = user
+            match[1]
+        else
+            null
     if match?
         key = match.replace /\s/g, "-"
         @get env, "storage-#{key}", (err, res) =>

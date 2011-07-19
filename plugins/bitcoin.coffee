@@ -9,7 +9,7 @@ url = "https://mtgox.com/code/data/ticker.php"
 
 # converts a decimal to dollar notation
 d = decimalToDollars = (num) ->
-    (Math.round num*100)/100
+    num.toFixed(2)
 
 bitcoin = (env) ->
     if @triggerOnly env # if the trigger is called
