@@ -46,6 +46,10 @@ module.exports = class Plugin
         nous.parser.parseString data
         json #return the json object after pushing the data to it
 
+    cleanHTML: (html) ->
+        html = html.replace /(<([^>]+)>)/ig, "" # replace all xml tags with empty strings
+        html = html.replace /\s+/g, " " # replace multiple spaces with a single space
+
     say: (env, msg) ->
         nous.irc.say env.to, msg
 
