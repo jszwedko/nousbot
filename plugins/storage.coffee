@@ -68,8 +68,6 @@ get = (env) ->
             throw err if err
             if res?
                 @respond env, res
-            else
-                @respond env, "No key found for #{match}"
 
 module.exports =
     set: new Plugin setInfo, set
