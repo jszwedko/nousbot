@@ -23,7 +23,7 @@ google = (env) ->
                 content = @cleanHTML content
                 results = "#{unescapedUrl} - #{titleNoFormatting} -- #{content}"
             else
-                results = "No results found for #{input.msg}."
+                results = "No results found for #{query}."
             @respond env, results
             
 

@@ -64,7 +64,7 @@ module.exports = class Bot extends EventEmitter
                     try
                         sub.apply plugin, [env]
                     catch err
-                        if @config.debug
+                        if @config.debug?
                             throw err
                         else
                             console.log "Oops! Looks like there was a problem with #{plugin.info.name}..."

@@ -17,7 +17,11 @@ weather = (env) ->
             if conditions?.weather?.forecast_information?.city?
                 results = {}
                 grab = ["condition", "temp_f", "temp_c", "humidity", "wind_condition"]
-                (results[x] = conditions.weather.current_conditions[x]["@"].data) for x in grab
+                for x in grab
+                    try
+                        results[x] = conditions.weather.current_conditions[x]["@"].data
+                    catch err
+                        results[x] = ""
                 results["city"] = conditions.weather.forecast_information.city["@"].data
                 response = results.city + ": " +
                            results.condition + ", " +
