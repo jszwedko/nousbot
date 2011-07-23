@@ -18,7 +18,6 @@ google = (env) ->
             response = JSON.parse data
             if response?.responseData?.results[0]?
                 result = response.responseData.results[0]
-                result[x] = unescape x for x in result
                 {titleNoFormatting, content, unescapedUrl} = result
                 content = @cleanHTML content
                 results = "#{unescapedUrl} - #{titleNoFormatting} -- #{content}"

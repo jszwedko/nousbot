@@ -1,5 +1,6 @@
 module.exports = class Plugin
     constructor: (@info, @subscriptions...) ->
+        @decode = require "./html_entities"
 
     matchTrigger: (env) ->
         # the info object must contain a trigger attribute for this to be used
@@ -47,16 +48,22 @@ module.exports = class Plugin
         json #return the json object after pushing the data to it
 
     cleanHTML: (html) ->
+        # takes a string of messy xml or html and cleans it
+        # strips xml tags, decodes html entities, removes extra whitespace
+        html = @decode (unescape html), "ENT_QUOTES"
         html = html.replace /(<([^>]+)>)/ig, "" # replace all xml tags with empty strings
         html = html.replace /\s+/g, " " # replace multiple spaces with a single space
 
     say: (env, msg) ->
+        # say a message to the given environment
         nous.irc.say env.to, msg
 
     respond: (env, msg) ->
+        # respond to whoever invoked the command
         nous.irc.say env.to, "#{env.from}: #{msg}"
 
     set: (env, key, val) ->
+        # set a key to a value, prefixed with "nous"
         nous.redis.client.set "nous-#{env.to}-#{key}", val
 
     get: (env, key, cb) ->
