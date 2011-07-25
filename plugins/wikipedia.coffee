@@ -16,7 +16,6 @@ wikipedia = (env) ->
         url = wikiurl query
         console.log url
         @scrape url, (err, $, data) =>
-            message = ""
             if err
                 message = "Sorry, couldn't find any results for #{query}"
             else
@@ -29,7 +28,7 @@ wikipedia = (env) ->
                 else
                     message = "Sorry, couldn't find any results for #{query}"
 
-                @say env, message
+            @say env, message
 
 wikipediaPlugin = new Plugin info, wikipedia
 
