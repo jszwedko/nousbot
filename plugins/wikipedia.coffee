@@ -16,20 +16,22 @@ wikipedia = (env) ->
         url = wikiurl query
         console.log url
         @scrape url, (err, $, data) =>
-            message = ""
             if err
                 message = "Sorry, couldn't find any results for #{query}"
             else
                 response = @xml data if data
 
-                if item = response?.Section?.Item?[0]
+                console.log response.Section.Item.Description
+
+                if item = response?.Section?.Item?[0] ? response?.Section?.Item
                     message = "#{item.Description?['#'][..200]} [#{item.Url?['#']}]"
                 else
                     message = "Sorry, couldn't find any results for #{query}"
 
-                @say env, message
+            @say env, message
 
 wikipediaPlugin = new Plugin info, wikipedia
+
 
 module.exports = {
     wikipedia: wikipediaPlugin
