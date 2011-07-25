@@ -15,6 +15,17 @@ echo = (env) ->
     if match?
         @say env, match
 
+echoPlugin = new Plugin info, echo
+
 # export our new plugin
 module.exports =
-    echo: new Plugin info, echo
+    echo: echoPlugin
+
+# TESTING
+# TestBot = require "../lib/testbot" # let's test our plugin...
+# nous = new TestBot echoPlugin
+# testEnv =
+#     message: ".echo string"
+#     from: "eggsby"
+#     to: "#web"
+# nous.test testEnv

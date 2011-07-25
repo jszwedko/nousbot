@@ -3,7 +3,9 @@ nous v2, rewriiiiteeee
 current deps:
   node.js
   redis
+  coffee-script
   npm install irc
+  npm install coffee-script
   npm install nodeio
   npm install xml2js
   npm install redis
