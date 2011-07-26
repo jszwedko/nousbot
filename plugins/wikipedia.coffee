@@ -28,7 +28,7 @@ wikipedia = (env) ->
                 else
                     message = "Sorry, couldn't find any results for #{query}"
 
-            @say env, message
+            @respond env, message
 
 wikipediaPlugin = new Plugin info, wikipedia
 
