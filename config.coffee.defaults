@@ -18,4 +18,5 @@ module.exports =
         plugins: {}
         users: []
     apikeys:
+        somekey: "someval"
         # lastfm: "" # uncomment and fill in key to enable plugin
