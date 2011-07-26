@@ -20,7 +20,7 @@ module.exports = class Plugin
     triggerOnly: (env) ->
         # returns a boolean
         if @info.trigger?
-            pattern = new RegExp "^\\#{nous.config.leader}#{@info.trigger}[\\s]?$", "i"
+            pattern = new RegExp "^\\#{nous.config.leader}#{@info.trigger}\\s*$", "i"
             return true if env.message.match pattern
         false
 
@@ -46,6 +46,15 @@ module.exports = class Plugin
         nous.parser.addListener "end", jsonPush
         nous.parser.parseString data
         json #return the json object after pushing the data to it
+
+
+    isEmptyObject :  (obj) ->
+        if typeof obj isnt 'object'
+            return false
+
+        for prop of obj
+            if obj.hasOwnProperty prop then return false
+        true
 
     cleanHTML: (html) ->
         # takes a string of messy xml or html and cleans it
