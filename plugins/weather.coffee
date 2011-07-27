@@ -42,8 +42,6 @@ weather = (env) ->
 
     # begin testing input
     if @triggerOnly env
-        dontsave = true
-
         @get env, "weather-#{env.from}", (err, res) =>
             if res?
                 getWeather res, printWeather
