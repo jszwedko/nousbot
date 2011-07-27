@@ -73,3 +73,11 @@ module.exports =
     set: new Plugin setInfo, set
     del: new Plugin delInfo, del
     get: new Plugin getInfo, get
+
+TestBot = require "../lib/testbot" # let's test our plugin...
+nous = new TestBot new Plugin getInfo, get
+testEnv =
+    message: "?foo"
+    from: "_jesse_"
+    to: "#web"
+nous.test testEnv
