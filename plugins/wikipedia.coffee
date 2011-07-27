@@ -14,14 +14,11 @@ wikipedia = (env) ->
     query = @matchTrigger env
     if query?
         url = wikiurl query
-        console.log url
         @scrape url, (err, $, data) =>
             if err
                 message = "Sorry, couldn't find any results for #{query}"
             else
                 response = @xml data if data
-
-                console.log response.Section.Item.Description
 
                 if item = response?.Section?.Item?[0] ? response?.Section?.Item
                     message = "#{item.Description?['#'][..200]} [#{item.Url?['#']}]"
