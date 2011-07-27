@@ -1,6 +1,9 @@
 module.exports =
     leader: "."
     # debug: "true" # uncomment for debug
+    storagepath: "memory.json" # comment this line to use alternate storage
+    # redis: true # uncomment to use redis
+    #     TODO expand this later to support different hosts, auth
     network:
         server: "irc.freenode.net"
         nick: "nousbot"

@@ -4,8 +4,8 @@
 {EventEmitter} = require "events"
 irc = require "irc"
 {Parser} = require "xml2js"
-Redis = require "./redis.coffee"
 Sieve = require "./sieve"
+storage = require "./storage"
 
 # for now, nousbot will only support one irc connection (one network)
 # hopefully someone can think of an elegant way to change this in the future
@@ -16,14 +16,22 @@ module.exports = class Bot extends EventEmitter
         @fs = require "fs"
         @nodeio = require "node.io"
         @parser = new Parser()
-        @redis = new Redis
         @makeGlobal() # Make nous global for use across the process
+        @buildStorage()
         @findPlugins() # Find possible plugins
 
     makeGlobal: ->
         # Turn the bot into a global notifier.
         # We'll use this to control our producer/consumer callbacks
         global.nous ?= process.nous ?= this
+
+    buildStorage: ->
+        if @config.redis?
+            @store = new storage.Redis @config.redis
+        else if @config.storagepath?
+            @store = new storage.JStore @config.storagepath
+        else
+            @store = new storage.Memstore
 
     findPlugins: ->
         # currently, nous can only find new plugins at startup
@@ -40,12 +48,12 @@ module.exports = class Bot extends EventEmitter
                 pluginModule = require "#{@dir}/plugins/#{plugin}"
                 for plugin of pluginModule
                     if @plugins[plugin]
-                        console.log "Looks like the plugin namespace #{plugin} is used more than once..."
+                        @errorHandler "Looks like the plugin namespace #{plugin} is used more than once..."
                     else
                         @plugins[plugin] = pluginModule[plugin]
                         @loadPlugin @irc, @plugins[plugin]
             catch err
-                console.log "There was a problem loading #{plugin}"
+                @errorHandler "There was a problem loading #{plugin}"
                 @errorHandler err
                 
 

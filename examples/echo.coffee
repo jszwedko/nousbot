@@ -24,8 +24,15 @@ module.exports =
 # TESTING
 TestBot = require "../lib/testbot" # let's test our plugin...
 nous = new TestBot echoPlugin
+# this one should pass
 testEnv =
-    message: ".echo string"
+    message: ".echo string test one"
     from: "eggsby"
     to: "#web"
-nous.test testEnv
+
+# this should fail
+testEnv2 =
+    message: ".echo"
+    from: "eggsby"
+    to: "#web"
+nous.test testEnv, testEnv2

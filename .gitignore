@@ -1,5 +1,6 @@
 *~
 *.log
+*.json
 node_modules
 config.coffee
 .settings.xml
