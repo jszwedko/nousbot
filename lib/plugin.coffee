@@ -73,10 +73,12 @@ module.exports = class Plugin
 
     set: (env, key, val) ->
         # set a key to a value, prefixed with "nous"
-        nous.redis.client.set "nous-#{env.to}-#{key}", val
+        nous.store.client.set "nous-#{env.to}-#{key}", val
+        if nous.store.jstore?
+            nous.store.save()
 
     get: (env, key, cb) ->
-        nous.redis.client.get "nous-#{env.to}-#{key}", cb
+        nous.store.client.get "nous-#{env.to}-#{key}", cb
 
     del: (env, key) ->
-        nous.redis.client.del "nous-#{env.to}-#{key}"
+        nous.store.client.del "nous-#{env.to}-#{key}"
