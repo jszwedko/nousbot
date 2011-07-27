@@ -1,4 +1,5 @@
 {Parser} = require "xml2js"
+storage = require "./storage"
 
 module.exports = class TestBot
     constructor: (@plugins...) ->
@@ -7,30 +8,26 @@ module.exports = class TestBot
         @nodeio = require "node.io"
         @makeGlobal()
         @makeIRC()
-        @makeRedis()
+        @buildStorage()
 
     makeGlobal: ->
         global.nous ?= process.nous ?= this
 
-    test: (env) ->
-        for plugin in @plugins
-            for sub in plugin.subscriptions
-                sub.apply plugin, [env]
+    test: (envs...) ->
+        for env in envs
+            do (env) =>
+                for plugin in @plugins
+                    for sub in plugin.subscriptions
+                        do (sub) -> sub.apply plugin, [env]
 
     makeIRC: ->
         @irc = say: (to, msg) => console.log "#{to} <#{@config.network.nick}> #{msg}"
 
-    makeRedis: ->
-        @memory = {}
-        @redis =
-            client: {
-                set: (k, v) -> nous.memory[k] = v
-                get: (k, cb) ->
-                    if nous.memory[k]?
-                        cb {}, nous.memory[k]
-                    else
-                        cb {}, {}
-                del: (key) ->
-                    if nous.memory[k]?
-                        delete nous.memory[k]
-            }
+    buildStorage: ->
+        if nous.config.redis?
+            @store = new storage.Redis nous.config.redis
+        else if nous.config.storagepath?
+            @store = new storage.JStore nous.config.storagepath
+        else
+            @store = new storage.Memstore
+
