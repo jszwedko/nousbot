@@ -3,8 +3,7 @@ Plugin = require "../lib/plugin"
 info =
     name: "weather"
     trigger: "weather"
-    doc: "'weather <zip|postal> [dontsave]' returns the current weather information"
-
+    doc: "'weather <<zip|postal> [dontsave] | $nick>' returns the current weather information for given location or location associated with the given nick"
 
 weather = (env) ->
     getWeather = (location, callback) =>
@@ -54,10 +53,20 @@ weather = (env) ->
             else
                 @respond env, "#{@info.doc}"
     else if match = @matchTrigger env
-        [tmp, location, dontsave] =  match.match /^(.*?)(dontsave)?\s*$/
-        location = location.trim()
+        [tmp, isnick, query, dontsave] =  match.match /^(\$)?(.*?)(dontsave)?\s*$/
+        query = query.trim()
 
-        getWeather location, (location, results) -> printWeather location, results
+        if isnick?
+            dontsave = true
+            @get env, "weather-#{query}", (err, res) =>
+                location = res unless @isEmptyObject res
+                if location?
+                    getWeather location, (location, results) -> printWeather location, results
+                else
+                    @respond env, "No remembered location for #{query}"
+        else 
+            location = query
+            getWeather location, (location, results) -> printWeather location, results
     
     @set env, "weather-#{env.from}", location unless dontsave
 
