@@ -19,11 +19,11 @@ calculator = (env) ->
 
             try
                 #borrowed from https://github.com/rmmh/skybot/blob/master/plugins/gcalc.py
-                response = $('h2.r b')?.text ? ''
-                response = response.replace(' &#215; 10<sup>', 'E', 'g')
-                response = response.replace('</sup>', '', 'g')
-                response = response.replace('<font size=-2> </font>', ',', 'g')
-                response = response.replace('\xa0', ',', 'g')
+                response = $('h2.r b')?.text \
+                	.replace(' &#215; 10<sup>', 'E', 'g') \
+                	.replace('</sup>', '', 'g') \
+                	.replace('<font size=-2> </font>', ',', 'g') \
+                	.replace('\xa0', ',')
             catch err
                 response = 'Could not calculate ' + match
             
