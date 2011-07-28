@@ -1,6 +1,7 @@
 module.exports = class Plugin
     constructor: (@info, @subscriptions...) ->
         @decode = require "./html_entities"
+        @info.keyprefix ?= @info.name
 
     matchTrigger: (env) ->
         # the info object must contain a trigger attribute for this to be used
@@ -73,12 +74,12 @@ module.exports = class Plugin
 
     set: (env, key, val) ->
         # set a key to a value, prefixed with "nous"
-        nous.store.client.set "nous-#{env.to}-#{key}", val
+        nous.store.client.set "nous-#{env.to}-#{@info.keyprefix}-#{key}", val
         if nous.store.jstore?
             nous.store.save()
 
     get: (env, key, cb) ->
-        nous.store.client.get "nous-#{env.to}-#{key}", cb
+        nous.store.client.get "nous-#{env.to}-#{@info.keyprefix}-#{key}", cb
 
     del: (env, key) ->
         nous.store.client.del "nous-#{env.to}-#{key}"

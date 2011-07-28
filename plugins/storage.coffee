@@ -4,6 +4,7 @@ Plugin = require "../lib/plugin"
 setInfo =
     name: "set"
     trigger: "set"
+    keyprefix: "set"
     doc: "'set <key> = <val>' sets a key to the given value, or you can use += to add to a key."
 
 set = (env) ->
@@ -16,13 +17,13 @@ set = (env) ->
             value = match[3]
             operator = match[2]
             if operator is "="
-                @set env, "storage-#{safekey}", value
+                @set env, safekey, value
                 response = "Set '#{key}' to '#{value}'"
             else if operator is "+="
-                @get env, "storage-#{safekey}", (err, res) =>
+                @get env, safekey, (err, res) =>
                     if res?
                         value = "#{res} #{value}"
-                    @set env, "storage-#{safekey}", value
+                    @set env, safekey, value
                 response = "Added '#{value}' to '#{key}'"
         else
             response = "Couldn't parse a key value pair."
@@ -31,15 +32,16 @@ set = (env) ->
 delInfo =
     name: "del"
     trigger: "del"
+    keyprefix: "storage"
     doc: "'del <key>' deletes the key from memory"
 
 del = (env) ->
     match = @matchTrigger env
     if match?
         key = match.replace /\s/g, "-"
-        @get env, "storage-#{key}", (err, res) =>
+        @get env, key, (err, res) =>
             if res?
-                @del env, "storage-#{key}"
+                @del env, key
                 response = "Deleted '#{match}: #{res}'"
             else
                 response = "No key set for '#{match}'"
@@ -48,6 +50,7 @@ del = (env) ->
 # get plugin setup
 getInfo =
     name: "get"
+    keyprefix: "storage"
     doc: "'?<key>' gets a key that was previously set"
 
 get = (env) ->
@@ -64,7 +67,7 @@ get = (env) ->
             null
     if match?
         key = match.replace /\s/g, "-"
-        @get env, "storage-#{key}", (err, res) =>
+        @get env, key, (err, res) =>
             throw err if err
             if res?
                 @respond env, res

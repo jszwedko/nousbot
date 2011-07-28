@@ -1,6 +1,5 @@
-add channel flood limiting, bot command use limiting
-add administrative functions including kicks, bans, etc
-plugin loading/unloading, general ACL work
-decouple redis from memory, make it a config declaration rather than default
-use in-memory store for default storage when redis isn't available
+ACL:
+    add channel flood limiting, bot command use limiting
+    add administrative functions including kicks, bans, etc
+    plugin loading/unloading
 add logging support
