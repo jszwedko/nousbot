@@ -42,7 +42,7 @@ weather = (env) ->
 
     # begin testing input
     if @triggerOnly env
-        @get env, "weather-#{env.from}", (err, res) =>
+        @get env, env.from, (err, res) =>
             if res?
                 getWeather res, printWeather
             else
@@ -57,7 +57,7 @@ weather = (env) ->
         if isnick?
             # This will only be reached if $<query> was matched
             dontsave = true
-            @get env, "weather-#{query}", (err, res) =>
+            @get env, query, (err, res) =>
                 if res?
                     getWeather res, printWeather
                 else
@@ -66,7 +66,7 @@ weather = (env) ->
             getWeather query, printWeather
 
         if not dontsave?
-            @set env, "weather-#{env.from}", query
+            @set env, env.from, query
 
 module.exports = {
     weather: new Plugin info, weather
