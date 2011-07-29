@@ -30,16 +30,12 @@ class Redis extends Storage
         if keys.length isnt vals.length
             throw 'Keys and vals are not the same length'
 
-        console.log keys
-        console.log vals
-
         keyVals = []
 
         for i in [0...keys.length]
             keyVals.push keys[i]
             keyVals.push vals[i]
 
-        console.log keyVals
         @client.mset keyVals, (err, res) -> throw err if err
 
     del: (keys) ->
