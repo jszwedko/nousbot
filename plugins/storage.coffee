@@ -4,7 +4,7 @@ Plugin = require "../lib/plugin"
 setInfo =
     name: "set"
     trigger: "set"
-    keyprefix: "set"
+    keyprefix: "storage"
     doc: "'set <key> = <val>' sets a key to the given value, or you can use += to add to a key."
 
 set = (env) ->
