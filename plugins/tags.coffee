@@ -4,7 +4,7 @@ tagAddInfo =
     name: 'tag add'
     trigger: 'tag add'
     keyprefix: 'tag'
-    doc : 'tag add <nick> <tag>'
+    doc : 'tag add <nick> <tag <, tag>*>: Associates the given tags with the given nick'
 
 tagAdd = (env) ->
     if @triggerOnly env
@@ -40,7 +40,7 @@ tagListInfo =
     name: 'tag list'
     trigger: 'tag list'
     keyprefix: 'tag'
-    doc : 'tag list <$nick, tag>'
+    doc : 'tag list <$nick, tag> Prints the tags or nicks associated with the nick or tag respectively'
 
 tagList = (env) ->
     if @triggerOnly env
@@ -82,7 +82,7 @@ tagDelInfo =
     name: 'tag del'
     trigger: 'tag del'
     keyprefix: 'tag'
-    doc : 'tag del <nick> <tag>'
+    doc : 'tag del <nick> <tag <, tag>*>: Disassociates the given tags with the given nick'
 
 tagDel = (env) ->
     if @triggerOnly env
