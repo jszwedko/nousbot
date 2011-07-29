@@ -17,14 +17,21 @@ calculator = (env) ->
         @scrape url, (err, $, data) =>
             throw err if err
 
+            #borrowed from https://github.com/rmmh/skybot/blob/master/plugins/gcalc.py
             try
-                #borrowed from https://github.com/rmmh/skybot/blob/master/plugins/gcalc.py
-                response = $('h2.r b')?.text \
-                	.replace(' &#215; 10<sup>', 'E', 'g') \
+                response = $('h2.r b')?.text
+
+            if !response?
+                try
+                    response = $('h3.r b')?.first()?.text
+
+            if response?
+                response = response \
+                    .replace(' &#215; 10<sup>', 'E', 'g') \
                 	.replace('</sup>', '', 'g') \
                 	.replace('<font size=-2> </font>', ',', 'g') \
-                	.replace('\xa0', ',')
-            catch err
+                	.replace('\xa0', ',', 'g')
+            else
                 response = 'Could not calculate ' + match
             
             @respond env, response
