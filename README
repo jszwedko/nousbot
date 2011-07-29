@@ -6,6 +6,6 @@ current deps:
   coffee-script
   npm install irc
   npm install coffee-script
-  npm install nodeio
+  npm install node.io
   npm install xml2js
   npm install redis
