@@ -3,3 +3,4 @@ ACL:
     add administrative functions including kicks, bans, etc
     plugin loading/unloading
 add logging support
+add a transaction layer for redis (and memstore?)
