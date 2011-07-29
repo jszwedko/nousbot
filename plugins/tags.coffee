@@ -1,5 +1,14 @@
 Plugin = require "../lib/plugin"
 
+tagInfo =
+    name: 'tag'
+    trigger: 'tag'
+    doc : 'tag add <nick> <tag <, tag>*> | tag del <nick> <tag <, tag>*> | tag list <$nick | tag>'
+
+tag = (env) ->
+    if @triggerOnly env
+        @respond env, "{@info.doc}"
+
 tagAddInfo =
     name: 'tag add'
     trigger: 'tag add'
@@ -166,6 +175,7 @@ setDel  = (env, keys, vals, callback = ->) ->
         callback(true)
 
 module.exports = {
+    tag: new Plugin tagInfo, tag
     tagAdd: new Plugin tagAddInfo, tagAdd
     tagList: new Plugin tagListInfo, tagList
     tagDel: new Plugin tagDelInfo, tagDel
