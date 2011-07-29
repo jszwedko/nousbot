@@ -19,11 +19,11 @@ calculator = (env) ->
 
             #borrowed from https://github.com/rmmh/skybot/blob/master/plugins/gcalc.py
             try
-                response = $('h2.r b')?.text
+                response = $('.r')?.fulltext
 
             if !response?
                 try
-                    response = $('h3.r b')?.first()?.text
+                    response = $('.r')?.first()?.fulltext
 
             if response?
                 response = response \
