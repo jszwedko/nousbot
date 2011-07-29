@@ -3,7 +3,7 @@ module.exports = class Plugin
         @decode = require "./html_entities"
         @info.keyprefix ?= @info.name
 
-    matchTrigger: (env) ->
+    matchTrigger: (env, trigger) ->
         # the info object must contain a trigger attribute for this to be used
         if @info.trigger?
             # fancy ass regex, captures matched input and possibly @user
@@ -72,14 +72,44 @@ module.exports = class Plugin
         # respond to whoever invoked the command
         nous.irc.say env.to, "#{env.from}: #{msg}"
 
-    set: (env, key, val) ->
-        # set a key to a value, prefixed with "nous"
-        nous.store.client.set "nous-#{env.to}-#{@info.keyprefix}-#{key}", val
+    set: (env, keys, vals) ->
+        unless keys instanceof Array
+            keys = [keys]
+        unless vals instanceof Array
+            vals = [vals]
+
+        if keys.length isnt vals.length
+            throw 'Key and values aren\'t the same length'
+
+        prefixedKeys = []
+        prefixedKeys.push "nous-#{env.to}-#{@info.keyprefix}-#{key}" for key in keys
+
+        # set keys to values, prefixed with "nous"
+        nous.store.set prefixedKeys, vals
         if nous.store.jstore?
             nous.store.save()
 
-    get: (env, key, cb) ->
-        nous.store.client.get "nous-#{env.to}-#{@info.keyprefix}-#{key}", cb
+    get: (env, keys..., cb) ->
+        if keys.length is 1 and keys[0] instanceof Array #if array is passed
+            keys = keys[0]
 
-    del: (env, key) ->
-        nous.store.client.del "nous-#{env.to}-#{key}"
+        prefixedKeys = []
+        prefixedKeys.push "nous-#{env.to}-#{@info.keyprefix}-#{key}" for key in keys
+        nous.store.get prefixedKeys, cb
+
+    del: (env, keys...) ->
+        if keys.length is 1 and keys[0] instanceof Array #if array is passed
+            keys = keys[0]
+
+        prefixedKeys = []
+        prefixedKeys.push "nous-#{env.to}-#{@info.keyprefix}-#{key}" for key in keys
+        nous.store.del prefixedKeys
+
+    startTransaction: (cb) ->
+        nous.store.startTransaction cb
+
+    rollback: ->
+        nouse.store.rollback()
+
+    commit: (cb) ->
+        nous.store.commit cb
